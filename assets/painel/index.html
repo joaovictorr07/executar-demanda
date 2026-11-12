@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:,">
+<title>Painel @@ROTULO@@</title>
+<script>document.documentElement.className = 'js';</script>
+<script>try { var t = localStorage.getItem('painel-tema'); if (t) document.documentElement.setAttribute('data-theme', t); } catch (e) {}</script>
+<style>
+@@CSS@@
+</style>
+</head>
+<body>
+<header class="topo">
+  <div class="id">
+    <h1>Painel @@ROTULO@@</h1>
+    <div class="sub">Gerado por <code>demanda.py estado painel --html</code> em @@AGORA@@. Dados do <code>.execucao.json</code>, do plano, da análise e da ER/ET: agregados e o texto de aceites, tarefas, decisões e pendências, nunca a fala nem a citação literal do usuário.</div>
+  </div>
+  <div class="chips">@@CHIPS@@</div>
+  <button type="button" id="tema" title="Alternar claro e escuro">Tema</button>
+</header>
+<nav class="abas" role="tablist" aria-label="Seções do painel">
+  <a role="tab" id="t-geral" href="#geral" aria-controls="aba-geral">Visão geral</a>
+  <a role="tab" id="t-grafo" href="#grafo" aria-controls="aba-grafo">Grafo</a>
+  <a role="tab" id="t-ondas" href="#ondas" aria-controls="aba-ondas">Ondas</a>
+  <a role="tab" id="t-metricas" href="#metricas" aria-controls="aba-metricas">Métricas</a>
+  <a role="tab" id="t-pendencias" href="#pendencias" aria-controls="aba-pendencias">Pendências</a>
+  <a role="tab" id="t-repos" href="#repos" aria-controls="aba-repos">Repositórios</a>
+</nav>
+<main>
+
+<section class="painel" id="aba-geral" role="tabpanel" aria-labelledby="t-geral">
+<div class="cards">@@CARDS@@</div>
+<h2>Ondas</h2>
+<div class="fila">@@ONDAS@@</div>
+<h2>Lacunas entre os artefatos</h2>
+@@LACUNAS@@
+</section>
+
+<section class="painel" id="aba-grafo" role="tabpanel" aria-labelledby="t-grafo">
+<noscript><p class="aviso">O grafo precisa de JavaScript. As demais abas funcionam sem ele; as lacunas estão na Visão geral.</p></noscript>
+<div class="grafo">
+  <aside class="lado" aria-label="Controles do grafo">
+    <div class="bloco">
+      <label for="busca">Buscar por ID ou texto</label>
+      <input type="search" id="busca" autocomplete="off">
+      <ul class="achados" id="achados"></ul>
+    </div>
+    <div class="bloco">
+      <label for="foco">Foco</label>
+      <select id="foco"><option value="">Todas as ondas</option></select>
+      <div class="linhab" role="group" aria-label="Layout">
+        <button type="button" id="lay-fluxo" aria-pressed="true">Fluxo</button>
+        <button type="button" id="lay-forca" aria-pressed="false">Força</button>
+        <button type="button" id="enquadrar">Enquadrar</button>
+        <button type="button" id="isolar" aria-pressed="false" title="Só a cadeia do nó selecionado fica visível (duplo clique no nó faz o mesmo; Esc volta)">Isolar a cadeia</button>
+      </div>
+    </div>
+    <div class="bloco"><h3>Tipos</h3><div id="tipos"></div></div>
+    <div class="bloco" id="detalhe" aria-live="polite"><h3>Selecionado</h3><span class="avi">Clique num nó: a cadeia dele (do que o originou ao que gerou) fica realçada. Duplo clique isola a cadeia; Esc volta. Arraste para mover, role para o zoom; Voltar do navegador volta ao nó anterior.</span></div>
+    <div class="bloco"><h3>Lacunas (<span id="nlac">0</span>)</h3><div id="lacunas"></div></div>
+  </aside>
+  <div class="tela"><canvas id="c" aria-label="Grafo de rastreabilidade"></canvas></div>
+</div>
+</section>
+
+<section class="painel" id="aba-ondas" role="tabpanel" aria-labelledby="t-ondas">
+<h2>Rodadas de revisão por onda</h2>
+<div class="leg"><span><i style="background:var(--r1)"></i>regras 1</span><span><i style="background:var(--r2)"></i>regras 2</span><span><i style="background:var(--r3)"></i>regras 3</span><span><i style="background:var(--atual)"></i>atual</span></div>
+@@GRAFICO_RODADAS@@
+<h2>Mutantes do revisor por onda</h2>
+<div class="leg"><span><i style="background:var(--novo)"></i>novos</span><span><i style="background:var(--reconf)"></i>reconfirmados</span><span><i style="background:var(--desp)"></i>desperdiçados (dentro dos novos)</span></div>
+@@GRAFICO_MUTANTES@@
+<h2>Medição por onda (P8)</h2>
+<div class="aviso">Clique numa linha para ver a onda no grafo.</div>
+<div class="tabela"><table>
+<thead><tr><th>Onda</th><th>Estado</th><th>Regras</th><th>Rodadas</th><th>Lacunas por classe</th><th>Decisões</th><th>Autoconf.</th><th>Mutantes (novos / reconf. / desperd.)</th><th>Execuções que falharam</th></tr></thead>
+<tbody>@@LINHAS_P8@@</tbody></table></div>
+</section>
+
+<section class="painel" id="aba-metricas" role="tabpanel" aria-labelledby="t-metricas">
+<h2>Tempo × esforço × qualidade</h2>
+<div class="aviso">Estimativas, não relógio de ponto: tempo ativo = eventos gravados no estado, com corte de 45 min entre eles; conferência = sessões de mutação, revisões, autoconferências e execuções de teste; implementação = o resto (inclui a espera pelo usuário). Defeito escapado só existe se registrado com <code>defeito add --origem posterior</code>.</div>
+@@RESUMO_REGRAS@@
+<div class="leg"><span><i style="background:var(--r1)"></i>regras 1</span><span><i style="background:var(--r2)"></i>regras 2</span><span><i style="background:var(--r3)"></i>regras 3</span><span><i style="background:var(--atual)"></i>atual</span><span>círculo maior = mais defeitos achados pelo processo</span></div>
+@@GRAFICO_DISPERSAO@@
+@@TABELA_METRICAS@@
+</section>
+
+<section class="painel" id="aba-pendencias" role="tabpanel" aria-labelledby="t-pendencias">
+<h2>Pendências</h2>
+@@PENDENCIAS@@
+</section>
+
+<section class="painel" id="aba-repos" role="tabpanel" aria-labelledby="t-repos">
+<h2>Repositórios</h2>
+<div class="tabela"><table>
+<thead><tr><th>Repo</th><th>Branch</th><th>HEAD</th><th>Push</th><th>Não commitados</th></tr></thead>
+<tbody>@@REPOS@@</tbody></table></div>
+</section>
+
+</main>
+<div id="dica" role="tooltip" hidden></div>
+<script type="application/json" id="dados">@@DADOS@@</script>
+<script>
+@@JS@@
+</script>
+</body>
+</html>
