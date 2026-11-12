@@ -31,7 +31,7 @@ DISPENSAVEIS = REGRAS + ('lint',)
 
 # Os presets são o ponto de partida; o repositório pode afrouxar com decisão do usuário.
 # `sem_colunas`: o AGENTS.md pede 120, mas o template HTML do legado passa disso em dezenas de linhas por
-# página (medido no web-logus-gestor-loja: 25 a 51 por arquivo); a regra ali só geraria ruído.
+# página (medido em repositórios legados: 25 a 51 por arquivo); a regra ali só geraria ruído.
 PRESETS = {
     'maven': {
         'eol': 'preservar', 'colunas': 120, 'comentario': 'bloquear', 'import_sem_uso': 'avisar',

@@ -68,7 +68,7 @@ e que o usuário aprove.
   "qualquer arquivo com esse nome".
 - **O teste mora na mesma tarefa** que o código que ele prova. "Testado em outra tarefa" é
   adiamento de teste.
-- `**Teste:**` com as classes entre crases. Repositório sem suíte (web, api-logus-report):
+- `**Teste:**` com as classes entre crases. Repositório sem suíte (ex: web, api-relatorios):
   `roteiro — <passos>` com `**Gate:** roteiro`, ou `nenhum — só build` com `**Gate:** build`.
   `nenhum` num repositório **com** suíte só com a decisão do usuário que dispensou (`D<n>`).
 

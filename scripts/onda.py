@@ -585,7 +585,7 @@ def conta_fora_do_diff(o, m, testes_da_onda):
 
 
 # Spec JS/TS -> classe, no padrão do JUnit que o tools/testar.mjs grava (`TEST-<Classe>.xml`):
-# o nome do arquivo em PascalCase + Spec (ou Test): logus-shortcut.spec.ts -> LogusShortcutSpec.
+# o nome do arquivo em PascalCase + Spec (ou Test): app-shortcut.spec.ts -> AppShortcutSpec.
 RE_SPEC_JS = re.compile(r'\.(spec|test)\.(ts|js|mjs|tsx|jsx)$')
 RE_CASO_JS = re.compile(r'\b(it|test)(\.\w+(\([^)]*\))?)*\s*\(')
 

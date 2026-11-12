@@ -57,7 +57,6 @@ def conferir_mensagem(msg, rel, prefixo_hook=False):
 def conferir_marcadores(real, rel, diff=None):
     sigla = C.git(real, 'config', 'user.sigladev', checar=False)
     if not sigla:
-        rel.aviso('git config user.sigladev vazio — marcadores DEBUG-/WIP- não conferidos')
         return
     padrao = re.compile(r'(DEBUG|WIP)-%s' % re.escape(sigla), re.IGNORECASE)
     if diff is None:

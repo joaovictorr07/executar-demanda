@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Peças que todos os comandos do `demanda.py` usam.
 
-O desenho é o do `lessons.py` do tlc e do `validar.py` do skills-documentacao: **o modelo julga, o
+O desenho é o da validação contínua por evidências: **o modelo julga, o
 script contabiliza**. Todo estado mecânico da execução de uma demanda — repositórios e comandos,
 ondas, tarefas e seus commits, execuções de teste, mutantes, revisões — vive num arquivo só,
 `<pasta do projeto>/.execucao.json`, que só os scripts escrevem. Os `.md` continuam sendo
@@ -57,7 +57,7 @@ RE_ACEITE = re.compile(r'\bA(%s)\.(\d+)\b' % RE_ONDA)
 # ------------------------------------------------------------------------------ ambiente
 
 def configurar_saida():
-    """Força UTF-8 em stdout/stderr (mesmo motivo do ambiente.py do skills-documentacao)."""
+    """Força UTF-8 em stdout/stderr para consistência entre plataformas."""
     for fluxo in (sys.stdout, sys.stderr):
         if hasattr(fluxo, 'reconfigure'):
             try:
@@ -1096,7 +1096,9 @@ def hash_da_onda(texto, onda):
 # ------------------------------------------------------------------------------ documentos
 
 def texto_docx(caminho):
-    """Texto corrido de um .docx (stdlib): parágrafos de word/document.xml, sem marcação."""
+    """Texto corrido de um documento (.docx pelo XML; o resto como texto direto)."""
+    if not (caminho or '').lower().endswith('.docx'):
+        return ler(caminho) if os.path.isfile(caminho) else ''
     import html
     import zipfile
     with zipfile.ZipFile(caminho) as z:
@@ -1124,7 +1126,11 @@ def arquivo_plano_base(pasta, estado):
 
 def arquivos_er(pasta):
     import glob
-    return sorted(glob.glob(os.path.join(pasta, 'ER*.docx')))
+    padroes = ['ER*.docx', 'ER*.md', 'requisitos*.md', 'requisitos*.docx', 'especificacao*.md', 'PRD*.md']
+    encontrados = []
+    for pat in padroes:
+        encontrados.extend(glob.glob(os.path.join(pasta, pat)))
+    return sorted(dict.fromkeys(encontrados))
 
 
 def linhas_novas(antigo, novo):

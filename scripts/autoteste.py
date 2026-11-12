@@ -579,7 +579,7 @@ def checar_unidades(r):
                  ('x.service.ProdutoServiceTest', 'x.velho.ProdutoServiceTest', False),
                  ('x.service.ProdutoServiceTest', 'ProdutoServiceTest', True),
                  ('Produto*Test', 'x.velho.ProdutoServiceTest', True), ('x.service.*Test', 'x.velho.ProdutoServiceTest', False),
-                 ('CalcTest', 'CalcTest', True), ('LogusGridSpec', 'LogusGridSpec', True)]
+                 ('CalcTest', 'CalcTest', True), ('DataGridSpec', 'DataGridSpec', True)]
         errados = [c for c in casos if T.casa_classe(c[0], c[1]) != c[2]]
         r.registrar('classe pedida casa pelo nome simples ou qualificado, sem confundir homônimas', not errados, str(errados))
     finally:
@@ -663,7 +663,7 @@ def checar_unidades(r):
     comum = {'so_testes': False, 'tarefas': {
         'T1.1': _t('A1.1', 'src/test/java/a/FooTest.java'),
         'T1.2': _t('A1.2', 'src/main/java/a/Foo.java', 'src/test/java/a/FooTest.java'),
-        'T1.3': _t('A1.3', 'web/src/app/logus-shortcut.spec.ts')}}
+        'T1.3': _t('A1.3', 'web/src/app/app-shortcut.spec.ts')}}
     r.registrar('onda comum: aceite cujas tarefas só mexem em teste conta fora do diff (morto por classe da onda)',
                 OND.conta_fora_do_diff(comum, dict(base_m, aceite='A1.1'), novos))
     r.registrar('onda comum: aceite com tarefa que mexe em produção não conta fora do diff',
@@ -674,8 +674,8 @@ def checar_unidades(r):
                 not OND.conta_fora_do_diff(comum, dict(base_m, aceite='A1.1', morto_por='erro'), novos))
     r.registrar('onda comum: aceite só de testes com spec .ts conta (classe no padrão do testar.mjs)',
                 OND.conta_fora_do_diff(comum, {'repo': 'web', 'aceite': 'A1.3', 'morto_por': 'falha',
-                                               'classes_que_falharam': ['LogusShortcutSpec']},
-                                       {'web': {'LogusShortcutSpec'}}))
+                                               'classes_que_falharam': ['AppShortcutSpec']},
+                                       {'web': {'AppShortcutSpec'}}))
     r.registrar('fora do diff: falha da homônima antiga não conta pela classe nova da onda',
                 not OND.conta_fora_do_diff(so, dict(base_m, classes_que_falharam=['x.velho.FooTest']), {'api': {'x.service.FooTest'}})
                 and OND.conta_fora_do_diff(so, dict(base_m, classes_que_falharam=['x.service.FooTest']), {'api': {'x.service.FooTest'}}))
@@ -740,10 +740,10 @@ def checar_unidades(r):
         shutil.rmtree(d_h, ignore_errors=True)
     import revisao as RVT
     r.registrar('spec JS/TS: nome de classe no padrão do testar.mjs',
-                OND.classe_de_spec('p/buttons/src/logus-shortcut.spec.ts') == 'LogusShortcutSpec'
+                OND.classe_de_spec('p/buttons/src/app-shortcut.spec.ts') == 'AppShortcutSpec'
                 and OND.classe_de_spec('core/theme.service.spec.ts') == 'ThemeServiceSpec'
                 and OND.classe_de_spec('x/cpf-cnpj.test.js') == 'CpfCnpjTest'
-                and OND.classe_de_spec('x/logus-grid.ts') is None and OND.classe_de_spec('x/FooTest.java') is None)
+                and OND.classe_de_spec('x/data-grid.ts') is None and OND.classe_de_spec('x/FooTest.java') is None)
     d = tempfile.mkdtemp(prefix='autoteste-spec-')
     try:
         g = lambda *a: subprocess.run(['git', '-C', d] + list(a), check=True, capture_output=True)
@@ -754,14 +754,14 @@ def checar_unidades(r):
             fh.write("it('a', () => {});\n")
         g('add', '.'); g('commit', '-q', '-m', 'base')
         base_git = subprocess.run(['git', '-C', d, 'rev-parse', 'HEAD'], capture_output=True, text=True).stdout.strip()
-        with open(os.path.join(d, 'src', 'logus-grid.spec.ts'), 'w') as fh:
+        with open(os.path.join(d, 'src', 'data-grid.spec.ts'), 'w') as fh:
             fh.write("describe('x', () => { it.each([1])('a', () => {}); });\n")
         with open(os.path.join(d, 'src', 'vazio.spec.ts'), 'w') as fh:
             fh.write('export const x = 1;\n')
-        with open(os.path.join(d, 'src', 'logus-grid.ts'), 'w') as fh:
+        with open(os.path.join(d, 'src', 'data-grid.ts'), 'w') as fh:
             fh.write("it('nao e teste', () => {});\n")
         r.registrar('classes alteradas: spec .ts novo com caso entra; sem caso, produção e velho não',
-                    OND._testes_alterados(d, base_git) == {'LogusGridSpec'}, str(OND._testes_alterados(d, base_git)))
+                    OND._testes_alterados(d, base_git) == {'DataGridSpec'}, str(OND._testes_alterados(d, base_git)))
         with open(os.path.join(d, 'src', 'velho.spec.ts'), 'w') as fh:
             fh.write("// it('a', () => {});\nit.skip('b', () => {});\n")
         rel_js = C.Relatorio('x')

@@ -2,7 +2,7 @@
   "name": "executar-demanda",
   "displayName": "Executar Demanda em Ondas",
   "version": "1.0.0",
-  "description": "Planeja e executa a implementação de uma demanda da Logus em ondas — plano com aceite e tarefas rastreáveis à análise, commits no formato da casa, testes registrados, injeção de defeitos num scratch isolado, revisor independente por onda e parecer de liberação GO/NO-GO —, com gates que scripts Python fazem valer.",
-  "author": "Logus Retail",
-  "repository": "https://github.com/logus-skills/executar-demanda"
+  "description": "Planeja e executa a implementação de demandas e features de software em ondas estruturadas — plano com aceite e tarefas rastreáveis à análise, commits padronizados, testes registrados, injeção de mutantes em scratch isolado, revisor independente por onda e parecer de liberação GO/NO-GO —, com gates que scripts Python fazem valer.",
+  "author": "Open Source / Comunidade",
+  "repository": "https://github.com/skills/executar-demanda"
 }

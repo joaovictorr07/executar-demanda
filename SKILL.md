@@ -131,8 +131,8 @@ que as encontra no ambiente **recusa**: tire-as.
    aprovar várias de uma vez. A análise também é selada na aprovação. Seção de onda encerrada não muda.
    **Depois da 1ª revisão, o escopo da onda congela:** a correção vai sob a tarefa dona do aceite, e requisito
    novo vira pendência e outra onda. Push, banco, deploy e publicação pedem ok explícito, cada um.
-6. Respeite o `AGENTS.md` aplicável e o escopo aprovado. Alterações de manifests e dependências
-   seguem as regras do projeto; não há proibição global específica da Logus.
+6. Respeite o `AGENTS.md` (ou `GEMINI.md`) aplicável e o escopo aprovado. Alterações de manifests e dependências
+   seguem as regras e padrões acordados para o projeto.
 7. **Commit:** mensagem descritiva em PT-BR, conforme o projeto, sem pressupor hook de prefixo, sem `Co-Authored-By`, sempre por
    `demanda.py commit` ou ligado depois com `vincular`.
 8. **Autor ≠ revisor.** A revisão da onda é de um subagente novo. Quem implementou confere antes

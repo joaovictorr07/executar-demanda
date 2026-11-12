@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Execução de uma demanda em ondas, com gates que o script faz valer.
 
-Uma CLI só, para poupar chamadas (como o er_et.py do skills-documentacao). O primeiro argumento
+Uma CLI unificada de gerenciamento de ciclo de vida e gates. O primeiro argumento
 posicional de quase todo subcomando é o projeto: "NN - AAAA", "NN/AAAA" ou um caminho (só o
 número não: o ano é do usuário dizer).
 

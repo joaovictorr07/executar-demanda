@@ -615,10 +615,10 @@ def validar(pasta, estado=None):
         base = C.arquivo_plano_base(pasta, estado)
         autorizado = isinstance(sa, dict) and base and not DC.exigir(estado, sa.get('decisao'))
         if sem_doc and not autorizado:
-            rel.erro('sem %s e sem ER — pontos em aberto e origens não têm contra o que ser conferidos. '
-                     'Gere a análise (skills-documentacao) ou registre a decisão do usuário de seguir '
+            rel.erro('sem %s e sem documento de requisitos — pontos em aberto e origens não têm contra o que ser conferidos. '
+                     'Forneça a análise (%s ou requisitos) ou registre a decisão do usuário de seguir '
                      'com o plano base: `validar-plano --sem-analise D<n> --plano-base <arquivo>`'
-                     % os.path.basename(C.arquivo_analise(pasta)))
+                     % (os.path.basename(C.arquivo_analise(pasta)), os.path.basename(C.arquivo_analise(pasta))))
         else:
             rel.aviso('sem %s — rastreabilidade com a análise não conferida%s'
                       % (os.path.basename(C.arquivo_analise(pasta)),

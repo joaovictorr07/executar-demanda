@@ -80,7 +80,7 @@ mensagem não imprime. Regra geral: o que a mensagem pede como decisão, pergunt
   do `.gitignore`. Mostre o arquivo ao usuário; não mexa no `.gitignore` sem ok.
 - **"… casou classes homônimas"** (aviso do `testar`) — o nome simples pedido existe em mais de
   um pacote, e o resultado soma todas. Para provar uma só, peça o nome qualificado
-  (`logus.….FooServiceTest`), no `testar` e no `--testes` do mutante.
+  (`com.empresa.servico.FooServiceTest`), no `testar` e no `--testes` do mutante.
 - **"a seleção não passa SEM mutação"** — os testes já falham no scratch (ex.: `.m2` da branch
   errada). Nenhum mutante conta. Pare e mostre o log.
 - **Mutante `nao_compila`** — não conta. Escolha uma mutação de comportamento que compile.

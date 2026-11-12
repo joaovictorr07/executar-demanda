@@ -90,7 +90,7 @@ um humano erraria:
   O `validar-plano` lista os aceites só de testes como aviso, para o usuário ver ao aprovar.
   O script grava as classes que falharam em cada mutante (`classes_que_falharam`). Classe de
   teste alterada: Java com `@Test`, ou spec JS/TS (`*.spec.ts`, `*.test.ts`…) com algum `it(`/`test(`,
-  pelo nome do arquivo em PascalCase + `Spec`/`Test` (`logus-shortcut.spec.ts` → `LogusShortcutSpec`).
+  pelo nome do arquivo em PascalCase + `Spec`/`Test` (`custom-button.spec.ts` → `CustomButtonSpec`).
 - **Uma linha, um mutante** para o mínimo: três mutações na mesma linha contam uma.
 - Mínimo de mortos pelo porte da onda: **2 na leve** (até 4 tarefas e risco normal), 3 na normal;
   `Risco: alto`: pelo menos 5, cobrindo cada ramo de cálculo.

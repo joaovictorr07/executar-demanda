@@ -17,7 +17,7 @@ O que muda em relação ao original:
   das features do tlc. Contar "2 projetos" não confirmaria quase nada;
 - **armadilha de um repositório nasce confirmada**: esperando ocorrências, quase toda armadilha
   ficaria candidata e não chegaria ao `iniciar-onda`. Os outros sinais seguem pedindo 2;
-- sinais da casa, incluindo `armadilha` — as "Armadilhas desta rodada" das consolidações.
+- sinais de qualidade e processo, incluindo `armadilha` — as "Armadilhas desta rodada" das consolidações.
 
 Sem âncora (`--fonte`) não há lição: é opinião, e o script recusa.
 """

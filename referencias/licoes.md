@@ -36,7 +36,7 @@ Onda limpa não registra nada. Isso é o resultado certo, não um esquecimento.
   playbook.
 - `--fonte` é obrigatória: sem âncora é opinião, e o script recusa.
 - `--escopo` é o apelido de um repositório **configurado no projeto** (`api`, `ui`); o script grava
-  também a pasta dele (`logus-corporativo-api`), que é o que junta a mesma lição entre projetos.
+  também a pasta dele (ex: `backend-api`), que é o que junta a mesma lição entre projetos.
 - **Lição é sobre o código, não sobre o método.** O que ensina a usar a skill, o harness ou uma
   ferramenta (fingerprint, hook, Playwright, `TaskStop`) não tem repositório e é recusado: diga ao
   usuário, que decide se a skill muda. É a regra do tlc — opinião sobre o processo é decisão de
