@@ -1,0 +1,23 @@
+{
+  "executar-demanda-falas": {
+    "PreInvocation": [
+      {
+        "type": "command",
+        "command": "python ./hooks/registrar-fala-usuario.py",
+        "timeout": 15
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "ask_question",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python ./hooks/registrar-fala-usuario.py",
+            "timeout": 15
+          }
+        ]
+      }
+    ]
+  }
+}

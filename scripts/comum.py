@@ -886,7 +886,35 @@ def casa_padrao(caminho, padroes):
 # única prova, fora da conversa, de que uma decisão veio do usuário: toda decisão com fonte
 # "usuario" e toda aprovação de plano citam um trecho literal que tem de estar lá.
 
-FALAS = os.path.normpath(os.path.expanduser(os.environ.get('EXEC_DEMANDA_FALAS', os.path.join(os.environ.get('CODEX_HOME', os.path.expanduser('~/.codex')), 'executar-demanda', 'falas-usuario'))))
+def _pastas_falas_candidatas():
+    pastas = []
+    env = os.environ.get('EXEC_DEMANDA_FALAS')
+    if env:
+        pastas.append(os.path.normpath(os.path.expanduser(env)))
+    # Gemini / Antigravity
+    gemini_dir = os.path.normpath(os.path.expanduser('~/.gemini/falas-usuario'))
+    pastas.append(gemini_dir)
+    # Codex
+    codex_home = os.environ.get('CODEX_HOME', os.path.expanduser('~/.codex'))
+    pastas.append(os.path.normpath(os.path.join(codex_home, 'executar-demanda', 'falas-usuario')))
+    # Claude Code
+    pastas.append(os.path.normpath(os.path.expanduser('~/.claude/falas-usuario')))
+    return [p for p in dict.fromkeys(pastas) if os.path.isdir(p)]
+
+
+def _padrao_falas():
+    env = os.environ.get('EXEC_DEMANDA_FALAS')
+    if env:
+        return os.path.normpath(os.path.expanduser(env))
+    if os.path.isdir(os.path.expanduser('~/.gemini')):
+        return os.path.normpath(os.path.expanduser('~/.gemini/falas-usuario'))
+    codex_home = os.environ.get('CODEX_HOME', os.path.expanduser('~/.codex'))
+    if os.path.isdir(codex_home):
+        return os.path.normpath(os.path.join(codex_home, 'executar-demanda', 'falas-usuario'))
+    return os.path.normpath(os.path.expanduser('~/.claude/falas-usuario'))
+
+
+FALAS = _padrao_falas()
 MIN_CITACAO = 12
 # Prompts que o Claude Code injeta como se fossem do usuário (o hook já não os grava; o filtro
 # aqui limpa o que entrou antes dele).
@@ -897,22 +925,30 @@ NAO_E_FALA = ('<task-notification', '<agent-message', '<local-command-stdout', '
 def falas():
     """Entradas do log, em ordem. Linha corrompida é ignorada (o hook nunca bloqueia)."""
     saida = []
-    if not os.path.isdir(FALAS):
-        return saida
-    for nome in sorted(os.listdir(FALAS)):
-        if not nome.endswith('.jsonl'):
-            continue
-        with open(os.path.join(FALAS, nome), encoding='utf-8', errors='replace') as fh:
-            for ln in fh:
-                try:
-                    e = json.loads(ln)
-                except ValueError:
-                    continue
-                if not isinstance(e, dict) or not e.get('texto'):
-                    continue
-                if e.get('tipo') == 'prompt' and e['texto'].lstrip().startswith(NAO_E_FALA):
-                    continue
-                saida.append(e)
+    vistos = set()
+    pastas = _pastas_falas_candidatas()
+    if not pastas and os.path.isdir(FALAS):
+        pastas = [FALAS]
+    for pasta in pastas:
+        for nome in sorted(os.listdir(pasta)):
+            if not nome.endswith('.jsonl'):
+                continue
+            with open(os.path.join(pasta, nome), encoding='utf-8', errors='replace') as fh:
+                for ln in fh:
+                    try:
+                        e = json.loads(ln)
+                    except ValueError:
+                        continue
+                    if not isinstance(e, dict) or not e.get('texto'):
+                        continue
+                    if e.get('tipo') == 'prompt' and e['texto'].lstrip().startswith(NAO_E_FALA):
+                        continue
+                    chave_unica = (e.get('em'), e.get('texto'))
+                    if chave_unica in vistos:
+                        continue
+                    vistos.add(chave_unica)
+                    saida.append(e)
+    saida.sort(key=lambda x: str(x.get('em') or ''))
     return saida
 
 

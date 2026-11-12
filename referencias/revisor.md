@@ -21,9 +21,9 @@ testes realmente o protegem. Sem evidência, conta zero.
 - o diff da onda por repositório (a tabela "Commits da onda" em `revisao-onda-<N>.md` traz o
   intervalo; use `git -C <repo> diff <base>` e `git -C <repo> diff` para o não commitado);
 - os testes das classes citadas no campo **Teste** das tarefas;
-- `~/.codex/skills/executar-demanda/referencias/mutantes.md`;
+- a pasta de referências de mutantes (`referencias/mutantes.md`);
 - as lições confirmadas: `& $PY $D licao list --escopo <repo>`, com
-  `$D = Join-Path $HOME ".codex/skills/executar-demanda/scripts/demanda.py"` e `$PY = <o Python que o orquestrador
+  `$D = 'C:\dev\skills\executar-demanda\scripts\demanda.py'` (ou relativo à skill) e `$PY = <o Python que o orquestrador
   informar>`.
 
 **Regras:**
@@ -84,7 +84,7 @@ testes realmente o protegem. Sem evidência, conta zero.
 4. **Qualidade e riscos fora dos aceites.** Leia o diff da onda inteiro, não só o que os aceites
    tocam, e escreva o que pode dar errado: concorrência e transação (o que acontece se a JVM cai
    no meio, se duas requisições chegam juntas), estado que fica pela metade, escopo além do pedido,
-   regra do `AGENTS.md` do repositório não seguida (o que o gate de padrão já confere —
+   regra do `GEMINI.md`/`AGENTS.md`/`CLAUDE.md` do repositório não seguida (o que o gate de padrão já confere —
    fim de linha, 120 colunas, TODO, import sem uso — não é achado seu quando o repositório o tem
    ligado) —, com `repo:arquivo:linha` e a gravidade. Nada achado: diga o que leu. É aqui que
    aparecem os defeitos que nenhum aceite descreve (a chave que fica órfã, a fila que espera para

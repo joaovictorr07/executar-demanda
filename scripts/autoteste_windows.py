@@ -94,6 +94,41 @@ class AdaptacaoWindows(unittest.TestCase):
         evento['tool_input']['answers'] = {'decisao': 'Aprovo o plano'}
         self.assertEqual(coletor.registros(evento), [])
 
+    def test_hook_antigravity_preinvocation_e_ask_question(self):
+        # PreInvocation com lastUserInput
+        evento_prompt = {
+            'conversationId': 'conv-gemini-123',
+            'workspacePaths': [str(self.pasta)],
+            'lastUserInput': 'Aprovo a execução da Onda 1 integralmente.'
+        }
+        linhas_prompt = coletor.registros(evento_prompt)
+        self.assertEqual(len(linhas_prompt), 1)
+        self.assertEqual(linhas_prompt[0]['tipo'], 'prompt')
+        self.assertEqual(linhas_prompt[0]['texto'], 'Aprovo a execução da Onda 1 integralmente.')
+
+        # PostToolUse com ask_question
+        evento_question = {
+            'conversationId': 'conv-gemini-123',
+            'workspacePaths': [str(self.pasta)],
+            'hookEventName': 'PostToolUse',
+            'toolCall': {
+                'name': 'ask_question',
+                'args': {
+                    'questions': [{
+                        'question': 'Aprova o plano?',
+                        'options': ['(Recomendado) Aprovar', 'Revisar']
+                    }]
+                }
+            },
+            'toolResponse': {
+                'answers': {'Aprova o plano?': 'Aprovar'}
+            }
+        }
+        linhas_q = coletor.registros(evento_question)
+        self.assertEqual(len(linhas_q), 1)
+        self.assertEqual(linhas_q[0]['tipo'], 'resposta')
+        self.assertEqual(linhas_q[0]['resposta'], 'Aprovar')
+
     def test_aprovacao_origem_tempo_e_citacao(self):
         registro = coletor.registros(self.evento(hook_event_name='UserPromptSubmit', prompt='Aprovo a execução desta demanda.'))[0]
         with patch.object(C, 'falas', return_value=[registro]):

@@ -11,7 +11,7 @@ comando do `demanda.py` que recusa (ERRO, exit 1) quando falta prova. A prova s�
 produzida sobre o código que está aí agora: o fingerprint é por repositório e **pelo conteúdo**,
 então commitar sem mudar arquivo não vence teste, revisão nem roteiro.
 
-## Codex no Windows
+## Ambiente e Invocação (Gemini / Antigravity, Codex e Claude Code)
 
 Esta skill é global, mas cada demanda usa a pasta explicitamente escolhida pelo usuário.
 Não deduza projeto, branch, requisitos ou aprovações. Mensagens de commit somente em PT-BR.
@@ -19,16 +19,24 @@ No modo de planejamento, apenas inspecione e elabore o plano na conversa: não e
 que criem estado, decisões, evidências ou arquivos. Inicie a execução quando o modo permitir.
 As instruções atuais do usuário e do ambiente prevalecem sobre este fluxo.
 
+### Como Executar os Scripts
+
+**No Gemini / Antigravity (Windows PowerShell):**
 ```powershell
 $PY = (Get-Command python).Source
-$D = Join-Path $HOME '.codex/skills/executar-demanda/scripts/demanda.py'
+$D = 'C:\dev\skills\executar-demanda\scripts\demanda.py'
 & $PY $D <subcomando> "<pasta-da-demanda>" ...
 ```
 
-Os comandos de teste/build armazenados são executados pelo shell nativo do Windows (`cmd.exe`),
-com argumentos corretamente citados; os exemplos de invocação acima são PowerShell.
+**No Codex / Claude Code:**
+```bash
+python scripts/demanda.py <subcomando> "<pasta-da-demanda>" ...
+```
+
+Os comandos de teste/build armazenados são executados pelo shell nativo do ambiente (no Windows,
+com argumentos devidamente tratados).
 Use caminho absoluto de Python quando configurar um comando. Dependências destinadas ao scratch
-são copiadas no Windows; alterações e exclusões na réplica não devem atingir a origem.
+são copiadas ou linkadas preservando a integridade da origem.
 Pastas gerais usam `PLANO.md`, `analise.md`, `ESTADO-ATUAL.md` e `PAINEL.html`.
 Pastas legadas `NN - AAAA` mantêm os nomes antigos por compatibilidade.
 
@@ -37,19 +45,24 @@ arquivo à mão, nem os blocos entre `<!-- gerado:…:inicio -->` e `<!-- gerado
 trava o projeto enquanto grava, então revisor e orquestrador podem rodar juntos.
 
 **Pré-requisito para aprovações.** O coletor `hooks/registrar-fala-usuario.py` deve estar
-configurado e confiável nos eventos `UserPromptSubmit` e `PostToolUse` de `request_user_input`.
-Ele registra falas futuras de todos os chats em `~/.codex/executar-demanda/falas-usuario/`,
-com chat, turno, horário e diretório. Não escreve na memória do Codex. Perguntas e opções não
-são aprovação. Respostas assíncronas só valem quando chegam pelo evento de mensagem do usuário.
+ativo via `hooks.json` (no Antigravity ou Codex):
+- No **Antigravity (Gemini)**: configurado em `hooks.json` ouvindo `PreInvocation` (para prompts do usuário) e `PostToolUse` de `ask_question`.
+- No **Codex**: configurado em `hooks.json` ouvindo `UserPromptSubmit` e `PostToolUse` de `request_user_input`.
+- No **Claude Code**: configurado em `UserPromptSubmit` e `PostToolUse` de `AskUserQuestion`.
+
+Ele registra falas em `~/.gemini/falas-usuario/` (ou `~/.codex/...` / `~/.claude/...`),
+com sessão, horário e diretório. Não escreve na memória do modelo. Perguntas e opções não
+são aprovação.
 Se não houver captura compatível, peça confirmação textual e confira o registro antes de avançar.
 Nunca preencha o registro manualmente para fazer uma aprovação passar.
 
-Use `request_user_input` quando disponível; fora dele, pergunte na conversa ou use a ferramenta
-assíncrona disponível e aguarde a resposta. Não registre ausência de resposta como autorização.
-O hook exige confiança no próprio Codex; configuração instalada não comprova ativação.
+Use a ferramenta interativa do seu ambiente quando disponível:
+- No Antigravity: `ask_question`
+- No Codex: `request_user_input`
+- No Claude Code: `AskUserQuestion`
+Fora deles, pergunte na conversa e aguarde a resposta. Não registre ausência de resposta como autorização.
 
-**Integridade da skill.** A instalação é uma pasta global independente, sem exigir Git ou link
-simbólico. O fingerprint do conteúdo congela a skill durante a onda. Mudanças exigem autoteste
+**Integridade da skill.** A instalação vive no repositório `C:\dev\skills\executar-demanda`, com links globais em `~/.gemini/config/plugins/`, `~/.gemini/config/skills/` e `~/.codex/skills/`. O fingerprint do conteúdo congela a skill durante a onda. Mudanças exigem autoteste
 verde e o tratamento de `--skill-alterada D<n>` quando houver onda ativa.
 
 **Ondas históricas.** As ondas iniciadas antes da 0.4.0 seguiam versões anteriores das regras. Hoje são
@@ -224,7 +237,7 @@ a descrição do que o mutante faz é hipótese até ser conferida.
 
 Dispare sem perguntar de novo: fechar a onda é pedido do usuário. Primeiro rode `revisao iniciar "<pasta-da-demanda>"
 N`. Ele recusa sem autoconferência válida, ou, da 2ª em diante, sem a reaplicação dos sobreviventes. Depois
-lance **um subagente novo** (ferramenta `collaboration.spawn_agent`) com o prompt de `referencias/revisor.md`, preenchido.
+lance **um subagente novo** (`invoke_subagent` com `TypeName: "self"` e `Role: "Independent Reviewer"` no Antigravity, `collaboration.spawn_agent` no Codex, ou `Agent` no Claude Code) com o prompt de `referencias/revisor.md`, preenchido.
 O subagente lê o código, roda os mutantes (`referencias/mutantes.md`), escreve `revisao-onda-N.md` e devolve o
 veredito e as lacunas. Não mande a ele o seu raciocínio de implementação. Use o modelo padrão na 1ª revisão;
 em onda leve e nas rodadas de confirmação com subagente, use o modelo herdado da sessão e o prompt incremental.
